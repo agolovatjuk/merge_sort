@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <vector>
 #include <string>
+#include <ctime>
+#include <chrono>
 
 /*
  import random
@@ -41,6 +43,7 @@ void *msort2(int *c, int lo, int mid, int hi){
     int i = lo, j = mid + 1;
 
     int *a = aux; //new int[hi + 1];
+    
     for(int k = lo; k <= hi; k++)
         a[k] = c[k];
 
@@ -73,8 +76,8 @@ void *sort2(int *c, int lo, int hi){
 }
 
 void mergeBU(int *c, int n){
-    #pragma omp parallel num_threads(2)
     for (int sz = 1; sz < n; sz += sz ){
+    #pragma omp parallel for num_threads(32)
         for (int lo = 0; lo < n - sz; lo += 2*sz)
             msort2(c, lo, lo + sz - 1, min(lo + 2*sz - 1, n - 1));
     }
@@ -103,10 +106,20 @@ void sort_file(){
     aux = new int[hi];
 
     int *x = &v1[0];
+    
+    typedef std::chrono::high_resolution_clock Clock;
+    auto t1 = Clock::now();
 
+//    #pragma omp parallel num_threads(2)
     mergeBU(x, v1.size());
-    for (int i = 0; i < v1.size(); i++)
-        cout << x[i] << endl;
+    
+    auto t2 = Clock::now();
+    std::cout << "Delta t2-t1: " 
+          << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+          << " nanoseconds" << std::endl;
+
+//    for (int i = 0; i < v1.size(); i++)
+//        cout << x[i] << endl;
 
     delete (aux);
 }
