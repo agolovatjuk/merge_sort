@@ -100,7 +100,7 @@ void sort_file(){
     for (int i = 0; i < v1.size(); i++)
         cout << x[i] << endl;
 
-    delete aux;
+    delete (aux);
 }
 
 int main()
