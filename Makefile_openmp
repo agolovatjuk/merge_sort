@@ -1,0 +1,2 @@
+all:
+	g++ -std=c++11 -fopenmp -o m2 m2_sort.cpp
