@@ -138,9 +138,12 @@ void sort_file(){
 //          << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
 //          << " nanoseconds" << std::endl;
 
-    for (int i = 0; i < v1.size(); i++)
-        cout << x[i] << " ";// << endl;
-
+    for (int i = 0; i < v1.size(); i++){
+        if(i < v1.size() - 1)
+            cout << x[i] << " ";// << endl;
+        else
+            cout << x[i] << endl;
+    }
     delete (aux);
 }
 
