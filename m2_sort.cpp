@@ -4,6 +4,13 @@
 #include <vector>
 #include <string>
 
+/*
+ import random
+ f = file("data.txt", "w")
+ for i in range(1000000):f.write("%s " % random.randrange(1,1000000))
+ f.close()
+*/
+
 using namespace std;
 
 int *aux;
@@ -80,12 +87,12 @@ void sort_file(){
     std::string buff;
 
     FILE *f = fopen("data.txt", "r");
-    while( (c[0]=fgetc(f)) != EOF){
-        if (c[0]==' ' && buff != ""){
-            v1.push_back(atoi(buff.c_str()));
+    while( (c[0] = fgetc(f)) != EOF){
+        if (c[0] == ' ' && buff != ""){
+            v1.push_back(atoll(buff.c_str()));
             buff = "";
         }
-        else
+        else if (c[0] != ' ')
             buff.append(c);
     }
     fclose(f);
