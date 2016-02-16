@@ -112,14 +112,6 @@ void sort_file(){
             buff.append(c);
     } while (c[0] != EOF);
     
-//    while( (c[0] = fgetc(f)) != EOF){
-//        if (c[0] == ' ' && buff != ""){
-//            v1.push_back(atoll(buff.c_str()));
-//            buff = "";
-//        }
-//        else if (c[0] != ' ')
-//            buff.append(c);
-//    }
     fclose(f);
 
     int lo = 0;
