@@ -73,10 +73,11 @@ void *sort2(int *c, int lo, int hi){
 }
 
 void mergeBU(int *c, int n){
-
-    for (int sz = 1; sz < n; sz *= 2)
+    #pragma omp parallel num_threads(2)
+    for (int sz = 1; sz < n; sz += sz ){
         for (int lo = 0; lo < n - sz; lo += 2*sz)
             msort2(c, lo, lo + sz - 1, min(lo + 2*sz - 1, n - 1));
+    }
 }
 
 void sort_file(){
