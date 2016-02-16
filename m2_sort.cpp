@@ -13,6 +13,15 @@
  f.close()
 */
 
+/*
+ http://www.viva64.com/ru/a/0054/
+ * 
+ * В последнем учебном модуле домашнее задание одно, предельно простое и дает сразу 100 баллов :)
+Используя OpenMP, Intel TBB или MPI (на ваш выбор) сделайте 
+ * (у себя, локально) параллельную сортировку слиянием и отсортируйте 
+ * полученный набор данных.
+ */
+
 using namespace std;
 
 int *aux;
@@ -92,14 +101,25 @@ void sort_file(){
     std::string buff;
 
     FILE *f = fopen("data.txt", "r");
-    while( (c[0] = fgetc(f)) != EOF){
-        if (c[0] == ' ' && buff != ""){
+    
+    do {
+        c[0] = fgetc(f);
+        if ((c[0] == ' ' || c[0] == EOF) && buff != ""){
             v1.push_back(atoll(buff.c_str()));
             buff = "";
         }
         else if (c[0] != ' ')
             buff.append(c);
-    }
+    } while (c[0] != EOF);
+    
+//    while( (c[0] = fgetc(f)) != EOF){
+//        if (c[0] == ' ' && buff != ""){
+//            v1.push_back(atoll(buff.c_str()));
+//            buff = "";
+//        }
+//        else if (c[0] != ' ')
+//            buff.append(c);
+//    }
     fclose(f);
 
     int lo = 0;
@@ -111,23 +131,22 @@ void sort_file(){
     typedef std::chrono::high_resolution_clock Clock;
     auto t1 = Clock::now();
 
-//    #pragma omp parallel num_threads(2)
     mergeBU(x, v1.size());
     
     auto t2 = Clock::now();
-    std::cout << "Delta t2-t1: " 
-          << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
-          << " nanoseconds" << std::endl;
+//    std::cout << "Delta t2-t1: " 
+//          << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+//          << " nanoseconds" << std::endl;
 
-//    for (int i = 0; i < v1.size(); i++)
-//        cout << x[i] << endl;
+    for (int i = 0; i < v1.size(); i++)
+        cout << x[i] << " ";// << endl;
 
     delete (aux);
 }
 
 int main()
 {
-    cout << "Hello msort!" << endl;
+//    cout << "Hello msort!" << endl;
 //    int d[] = {6,  4};
 //    int d[] = {6,1,  4};
 //    int d[] = {6,1,  5,4,3};
