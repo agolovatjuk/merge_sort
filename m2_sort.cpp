@@ -76,8 +76,9 @@ void *sort2(int *c, int lo, int hi){
 }
 
 void mergeBU(int *c, int n){
+    #pragma omp parallel num_threads(128)
     for (int sz = 1; sz < n; sz += sz ){
-    #pragma omp parallel for num_threads(32)
+    #pragma omp for //parallel for num_threads(32)
         for (int lo = 0; lo < n - sz; lo += 2*sz)
             msort2(c, lo, lo + sz - 1, min(lo + 2*sz - 1, n - 1));
     }
