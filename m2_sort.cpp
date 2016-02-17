@@ -99,11 +99,11 @@ void mergeBU(int *c, int n){
     }
 }
 
-std::vector <int> read_dataset(char *fname=(char *)"data.txt") {
+size_t read_dataset(char *fname, std::vector <int> *v1) {
 
     char c[2];
     c[1] = '\0';
-    std::vector <int> v1;
+//    std::vector <int> v1;
     std::string buff;
 
     FILE *f = fopen(fname, "r");
@@ -111,7 +111,7 @@ std::vector <int> read_dataset(char *fname=(char *)"data.txt") {
     do {
         c[0] = fgetc(f);
         if ((isspace(c[0]) || c[0] == EOF) && buff != ""){
-            v1.push_back(atoll(buff.c_str()));
+            v1->push_back(atoll(buff.c_str()));
             buff = "";
         }
         else if (! isspace(c[0])){
@@ -121,7 +121,7 @@ std::vector <int> read_dataset(char *fname=(char *)"data.txt") {
     
     fclose(f);
     
-    return v1;   
+    return v1->size();   
 }
 
 
@@ -130,7 +130,7 @@ void sort_dataset(){
     std::vector <int> v1;
     int lo = 0;
 
-    v1 = read_dataset((char *) "data.txt");
+    read_dataset((char *) "data.txt", &v1);
     aux = new int[v1.size()];
     int *x = &v1[0];
 
