@@ -99,22 +99,20 @@ void mergeBU(int *c, int n){
     }
 }
 
-void sort_file(){
+std::vector <int> read_dataset(char *fname=(char *)"data.txt") {
 
     char c[2];
     c[1] = '\0';
     std::vector <int> v1;
     std::string buff;
 
-    FILE *f = fopen("data.txt", "r");
+    FILE *f = fopen(fname, "r");
 
-    int cnt = 0;
-    
     do {
         c[0] = fgetc(f);
         if ((isspace(c[0]) || c[0] == EOF) && buff != ""){
             v1.push_back(atoll(buff.c_str()));
-            buff = ""; cnt++;
+            buff = "";
         }
         else if (! isspace(c[0])){
             buff.append(c);
@@ -122,20 +120,31 @@ void sort_file(){
     } while (c[0] != EOF);
     
     fclose(f);
+    
+    return v1;   
+}
 
+
+void sort_file(){
+
+    std::vector <int> v1;
+
+    v1 = read_dataset((char *) "data.txt");
+    
     int lo = 0;
     int hi = v1.size();
     aux = new int[hi];
 
     int *x = &v1[0];
 
-    cout << cnt << " "<< v1.size() << " File was read, sorting.." << endl;
+    cout << v1.size() << " File was read, sorting.." << endl;
     
     typedef std::chrono::high_resolution_clock Clock;
     auto t1 = Clock::now();
 
     mergeBU(x, v1.size());
-    
+
+//    cout.precision(7);    
     auto t2 = Clock::now();
     double ff = std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
     std::cout << "Delta t2-t1: " << ff  << " nanoseconds" << std::endl;
