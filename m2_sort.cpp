@@ -22,6 +22,12 @@
  * полученный набор данных.
  */
 
+/*
+ * TODO create my own Allocator instead std::vector<int>v1 for read data from file
+ * rewrite reading file with dataset with for(...) and use threads
+ * refactor code..
+ */
+
 using namespace std;
 
 int *aux;
@@ -85,7 +91,7 @@ void *sort2(int *c, int lo, int hi){
 }
 
 void mergeBU(int *c, int n){
-    #pragma omp parallel num_threads(128)
+    #pragma omp parallel num_threads(8)
     for (int sz = 1; sz < n; sz += sz ){
     #pragma omp for //parallel for num_threads(32)
         for (int lo = 0; lo < n - sz; lo += 2*sz)
@@ -101,15 +107,18 @@ void sort_file(){
     std::string buff;
 
     FILE *f = fopen("data.txt", "r");
+
+    int cnt = 0;
     
     do {
         c[0] = fgetc(f);
-        if ((c[0] == ' ' || c[0] == EOF) && buff != ""){
+        if ((isspace(c[0]) || c[0] == EOF) && buff != ""){
             v1.push_back(atoll(buff.c_str()));
-            buff = "";
+            buff = ""; cnt++;
         }
-        else if (c[0] != ' ')
+        else if (! isspace(c[0])){
             buff.append(c);
+        }
     } while (c[0] != EOF);
     
     fclose(f);
@@ -119,6 +128,8 @@ void sort_file(){
     aux = new int[hi];
 
     int *x = &v1[0];
+
+    cout << cnt << " "<< v1.size() << " File was read, sorting.." << endl;
     
     typedef std::chrono::high_resolution_clock Clock;
     auto t1 = Clock::now();
@@ -126,16 +137,20 @@ void sort_file(){
     mergeBU(x, v1.size());
     
     auto t2 = Clock::now();
-//    std::cout << "Delta t2-t1: " 
-//          << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
-//          << " nanoseconds" << std::endl;
+    double ff = std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
+    std::cout << "Delta t2-t1: " << ff  << " nanoseconds" << std::endl;
 
+/*    std::cout << "Delta t2-t1: " 
+          << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+          << " nanoseconds" << std::endl;
+*/
     for (int i = 0; i < v1.size(); i++){
         if(i < v1.size() - 1)
             cout << x[i] << " ";// << endl;
         else
             cout << x[i] << endl;
     }
+
     delete (aux);
 }
 
