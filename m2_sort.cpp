@@ -125,16 +125,13 @@ std::vector <int> read_dataset(char *fname=(char *)"data.txt") {
 }
 
 
-void sort_file(){
+void sort_dataset(){
 
     std::vector <int> v1;
+    int lo = 0;
 
     v1 = read_dataset((char *) "data.txt");
-    
-    int lo = 0;
-    int hi = v1.size();
-    aux = new int[hi];
-
+    aux = new int[v1.size()];
     int *x = &v1[0];
 
     cout << v1.size() << " File was read, sorting.." << endl;
@@ -184,7 +181,7 @@ int main()
 //    for(int k = 0; k < hi; k++)
 //        cout << d[k] << endl;
 
-    sort_file();
+    sort_dataset();
 
     return 0;
 }
