@@ -1,10 +1,14 @@
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <cstdio>
 #include <vector>
 #include <string>
 #include <ctime>
 #include <chrono>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 /*
  import random
@@ -33,7 +37,7 @@ using namespace std;
 int *aux;
 
 
-void *msort(int *a, int *b, int a_sz, int b_sz){
+void *msort_2part(int *a, int *b, int a_sz, int b_sz){
 
     int i=0, j=0;//, k=0;
     int *c = new int[a_sz+b_sz];
@@ -52,12 +56,12 @@ void *msort(int *a, int *b, int a_sz, int b_sz){
     return c;
 }
 
-void *msort2(int *c, int lo, int mid, int hi){
+void *msort(int *c, int lo, int mid, int hi){
 
     static int cnt = 0;
     int i = lo, j = mid + 1;
 
-    int *a = aux; //new int[hi + 1];
+    int *a = aux;
     
     for(int k = lo; k <= hi; k++)
         a[k] = c[k];
@@ -86,40 +90,47 @@ void *sort2(int *c, int lo, int hi){
     int mid = lo + (hi - lo)/2;
     sort2(c, lo, mid);
     sort2(c, mid + 1, hi);
-    msort2(c, lo, mid, hi);
+    msort(c, lo, mid, hi);
     return 0;
 }
 
 void mergeBU(int *c, int n){
-    #pragma omp parallel num_threads(8)
+    #pragma omp parallel num_threads(32)
     for (int sz = 1; sz < n; sz += sz ){
     #pragma omp for //parallel for num_threads(32)
         for (int lo = 0; lo < n - sz; lo += 2*sz)
-            msort2(c, lo, lo + sz - 1, min(lo + 2*sz - 1, n - 1));
+            msort(c, lo, lo + sz - 1, min(lo + 2*sz - 1, n - 1));
     }
 }
 
-size_t read_dataset(char *fname, std::vector <int> *v1) {
+ssize_t read_dataset(char *fname, std::vector <int> *v1) {
 
     char c[2];
     c[1] = '\0';
-//    std::vector <int> v1;
     std::string buff;
+//    std::stringbuf sbuff;
+    char bbb[10];
 
-    FILE *f = fopen(fname, "r");
 
-    do {
-        c[0] = fgetc(f);
-        if ((isspace(c[0]) || c[0] == EOF) && buff != ""){
-            v1->push_back(atoll(buff.c_str()));
-            buff = "";
-        }
-        else if (! isspace(c[0])){
-            buff.append(c);
-        }
-    } while (c[0] != EOF);
+    ifstream f_in(fname, ios_base::in);
+    while (f_in >> bbb) 
+        v1->push_back(strtoull(bbb, 0, 10));
+    f_in.close();
     
-    fclose(f);
+//    FILE *f = fopen(fname, "r");
+//    do {
+//        c[0] = fgetc(f);
+//        if ((isspace(c[0]) || c[0] == EOF) && buff != ""){
+////            v1->push_back(atoll(buff.c_str()));
+//            v1->push_back(strtoull(buff.c_str(),0,10));
+//            buff.clear();
+//        }
+//        else if (! isspace(c[0])){
+//            buff.append(c);
+//        }
+//    } while (c[0] != EOF);
+//    
+//    fclose(f);
     
     return v1->size();   
 }
@@ -150,12 +161,12 @@ void sort_dataset(){
           << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
           << " nanoseconds" << std::endl;
 */
-    for (int i = 0; i < v1.size(); i++){
-        if(i < v1.size() - 1)
-            cout << x[i] << " ";// << endl;
-        else
-            cout << x[i] << endl;
-    }
+//    for (int i = 0; i < v1.size(); i++){
+//        if(i < v1.size() - 1)
+//            cout << x[i] << " ";// << endl;
+//        else
+//            cout << x[i] << endl;
+//    }
 
     delete (aux);
 }
