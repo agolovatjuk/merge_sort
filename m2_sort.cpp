@@ -27,7 +27,9 @@
  */
 
 /*
- * TODO create my own Allocator instead std::vector<int>v1 for read data from file
+ * TODO 
+ * make class MSort
+ * create my own Allocator instead std::vector<int>v1 for read data from file
  * refactor code..
  */
 
