@@ -28,7 +28,6 @@
 
 /*
  * TODO create my own Allocator instead std::vector<int>v1 for read data from file
- * rewrite reading file with dataset with for(...) and use threads
  * refactor code..
  */
 
@@ -62,14 +61,14 @@ void *msort(size_t *c, size_t lo, size_t mid, size_t hi){
     return 0;
 }
 
-void *sort2(size_t *c, size_t lo, size_t hi){
+void *sort(size_t *c, size_t lo, size_t hi){
 
     if (lo >= hi)
         return 0;
 
     size_t mid = lo + (hi - lo)/2;
-    sort2(c, lo, mid);
-    sort2(c, mid + 1, hi);
+    sort(c, lo, mid);
+    sort(c, mid + 1, hi);
     msort(c, lo, mid, hi);
     return 0;
 }
