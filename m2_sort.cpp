@@ -95,18 +95,17 @@ ssize_t read_dataset(char *fname, std::vector <size_t> *v1) {
     return v1->size();   
 }
 
-void print_vbuff(std::vector <size_t> * v){
 
-//    size_t &x_iter = *v->begin(); // x_iter++
-//    vector <size_t>::iterator iter = v->begin(); // *(iter++)
+void print_vbuff(std::vector <size_t> *v){
 
-    for (size_t i = 0; i < v->size(); i++){
-        if(i < v->size() - 1)
-            cout << v->at(i) << " ";
+    for(auto n : *v){
+        if (n == v->back()) // last element of my vector!
+            cout << n << endl;
         else
-            cout << v->at(i) << endl;
+            cout << n << ' ';
     }
 }
+
 
 void sort_dataset(){
 
