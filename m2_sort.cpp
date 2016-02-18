@@ -117,20 +117,15 @@ void sort_dataset(){
     cout << vbuff.size() << " File was read, sorting.." << endl;
     
     typedef std::chrono::high_resolution_clock Clock;
-    auto t1 = Clock::now();
+    auto tm_bg = Clock::now();
 
     size_t *x = &vbuff[0];
     mergeBU(x, vbuff.size());
 
 //    cout.precision(7);    
-    auto t2 = Clock::now();
-    double ff = std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count();
-    std::cout << "Delta t2-t1: " << ff  << " nanoseconds" << std::endl;
-
-/*    std::cout << "Delta t2-t1: " 
-          << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
-          << " nanoseconds" << std::endl;
-*/
+    auto tm_en = Clock::now();
+    double tm_df = std::chrono::duration_cast<std::chrono::nanoseconds>(tm_bg - tm_en).count();
+    std::cout << "Delta t2-t1: " << tm_df  << " nanoseconds" << std::endl;
 
     print_vbuff(&vbuff);
 
