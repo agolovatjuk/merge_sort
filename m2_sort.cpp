@@ -87,13 +87,20 @@ void msortBU(size_t *c, size_t n){
 }
 
 
-ssize_t read_dataset(char *fname, std::vector <size_t> *v1) {
+ssize_t read_dataset(const char *fname, std::vector <size_t> *v1) {
 
     size_t buff;
 
     ifstream f_in(fname, ios_base::in);
+
+    if (!f_in) {
+        fprintf(stderr, "Error open: %s\n", fname);
+        return -1;
+    }
+
     while (f_in >> buff) 
         v1->push_back(buff);
+    
     f_in.close();
     
     return v1->size();   
@@ -111,14 +118,17 @@ void print_vbuff(std::vector <size_t> *v){
 }
 
 
-void sort_dataset(){
+void sort_dataset(const char *fname){
 
     std::vector <size_t> vbuff;
 
-    read_dataset((char *) "data.txt", &vbuff);
+    size_t cnt = read_dataset(fname, &vbuff);
+    if (cnt == -1){
+        return;
+    }
     auxArr = new size_t[vbuff.size()];
 
-    cout << vbuff.size() << " File was read, sorting.." << endl;
+    cout << vbuff.size() << " data from file was read, sorting.." << endl;
     
     typedef std::chrono::high_resolution_clock Clock;
     auto tm_bg = Clock::now();
@@ -137,7 +147,7 @@ void sort_dataset(){
     delete (auxArr);
 }
 
-int main()
+int main(int argc, char **argv)
 {
 //    int d[] = {1,5,6,  4,8};
 //    int lo = 0;
@@ -146,7 +156,24 @@ int main()
 //    mergeBU(d, hi);
 //    sort(d, lo, hi - 1);
 
-    sort_dataset();
+    int opt;
+//    char *fn_dflt = (char *) "data.txt";
+    std::string file_name = "";
+    
+    while ((opt = getopt(argc, argv, "fh:")) != -1) {
+        switch(opt) {
+            case 'f':
+                file_name = argv[optind];
+                break;
+            case 'h':
+                break;
+            default:
+                fprintf(stderr, "Usage: %s [-f] file_name\n",argv[0]);
+                exit(EXIT_FAILURE);
+        }
+    }
+    
+    sort_dataset(file_name.c_str());
 
     return 0;
 }
