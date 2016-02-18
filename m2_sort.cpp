@@ -63,19 +63,21 @@ void *msort(size_t *c, size_t lo, size_t mid, size_t hi){
     return 0;
 }
 
-void *sort(size_t *c, size_t lo, size_t hi){
+
+void sort(size_t *c, size_t lo, size_t hi){
 
     if (lo >= hi)
-        return 0;
+        return;
 
     size_t mid = lo + (hi - lo)/2;
     sort(c, lo, mid);
     sort(c, mid + 1, hi);
     msort(c, lo, mid, hi);
-    return 0;
 }
 
+
 void msortBU(size_t *c, size_t n){
+
     #pragma omp parallel num_threads(32)
     for (size_t sz = 1; sz < n; sz += sz ){
     #pragma omp for //parallel for num_threads(32)
@@ -83,6 +85,7 @@ void msortBU(size_t *c, size_t n){
             msort(c, lo, lo + sz - 1, min(lo + 2*sz - 1, n - 1));
     }
 }
+
 
 ssize_t read_dataset(char *fname, std::vector <size_t> *v1) {
 
@@ -122,19 +125,27 @@ void sort_dataset(){
 
     size_t *x = &vbuff[0];
     msortBU(x, vbuff.size());
+//    sort(x, 0, vbuff.size() - 1);
 
 //    cout.precision(7);    
     auto tm_en = Clock::now();
-    double tm_df = std::chrono::duration_cast<std::chrono::nanoseconds>(tm_bg - tm_en).count();
+    double tm_df = std::chrono::duration_cast<std::chrono::nanoseconds>(tm_en - tm_bg).count();
     std::cout << "Delta t2-t1: " << tm_df  << " nanoseconds" << std::endl;
 
-    print_vbuff(&vbuff);
+//    print_vbuff(&vbuff);
 
     delete (auxArr);
 }
 
 int main()
 {
+//    int d[] = {1,5,6,  4,8};
+//    int lo = 0;
+//    int hi = sizeof(d)/sizeof(int);
+//    auxArr = new int[hi];
+//    mergeBU(d, hi);
+//    sort(d, lo, hi - 1);
+
     sort_dataset();
 
     return 0;
