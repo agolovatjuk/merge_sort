@@ -125,7 +125,7 @@ void sort_dataset(){
 
     size_t *x = &vbuff[0];
     msortBU(x, vbuff.size());
-//    sort(x, 0, vbuff.size() - 1);
+//    sort(x, 0, vbuff.size() - 1); //recursive variant
 
 //    cout.precision(7);    
     auto tm_en = Clock::now();
