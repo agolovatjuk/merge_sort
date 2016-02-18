@@ -75,7 +75,7 @@ void *sort(size_t *c, size_t lo, size_t hi){
     return 0;
 }
 
-void mergeBU(size_t *c, size_t n){
+void msortBU(size_t *c, size_t n){
     #pragma omp parallel num_threads(32)
     for (size_t sz = 1; sz < n; sz += sz ){
     #pragma omp for //parallel for num_threads(32)
@@ -121,7 +121,7 @@ void sort_dataset(){
     auto tm_bg = Clock::now();
 
     size_t *x = &vbuff[0];
-    mergeBU(x, vbuff.size());
+    msortBU(x, vbuff.size());
 
 //    cout.precision(7);    
     auto tm_en = Clock::now();
