@@ -33,14 +33,14 @@
 
 using namespace std;
 
-size_t *aux;
+size_t *auxArr;
 
 void *msort(size_t *c, size_t lo, size_t mid, size_t hi){
 
     static int cnt = 0;
     size_t i = lo, j = mid + 1;
 
-    size_t *a = aux;
+    size_t *a = auxArr;
     
     for(size_t k = lo; k <= hi; k++)
         a[k] = c[k];
@@ -111,7 +111,7 @@ void sort_dataset(){
     std::vector <size_t> vbuff;
 
     read_dataset((char *) "data.txt", &vbuff);
-    aux = new size_t[vbuff.size()];
+    auxArr = new size_t[vbuff.size()];
 
     cout << vbuff.size() << " File was read, sorting.." << endl;
     
@@ -128,7 +128,7 @@ void sort_dataset(){
 
     print_vbuff(&vbuff);
 
-    delete (aux);
+    delete (auxArr);
 }
 
 int main()
